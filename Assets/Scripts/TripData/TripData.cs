@@ -15,14 +15,14 @@ namespace TripData
         public List<PlaceData> PlaceDatas;
         public List<ExpenseData> ExpenseDatas;
 
-        public TripData(string name, DateTime startDate, DateTime endDate, string note)
+        public TripData(string name, DateTime startDate, DateTime endDate, string note, List<PlaceData> placeDatas, List<ExpenseData> expenseDatas)
         {
             Name = name;
             StartDate = startDate;
             EndDate = endDate;
             Note = note;
-            PlaceDatas = new List<PlaceData>();
-            ExpenseDatas = new List<ExpenseData>();
+            PlaceDatas = placeDatas;
+            ExpenseDatas = expenseDatas;
         }
     }
 

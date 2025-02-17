@@ -10,30 +10,46 @@ namespace AddPlaceScreen
     [RequireComponent(typeof(ScreenVisabilityHandler))]
     public class AddPlaceScreenController : MonoBehaviour
     {
-        [SerializeField] private List<AddPlacePlane> _planes;
+        [SerializeField] private List<AddInfoPlane> _planes;
         [SerializeField] private Button _backButton;
         [SerializeField] private Button _saveButton;
         [SerializeField] private Button _addNewPlaceButton;
+        [SerializeField] private GameObject _emptyPlane;
 
+        private ScreenVisabilityHandler _screenVisabilityHandler;
         private List<PlaceData> _placeDatas;
         
         public event Action<List<PlaceData>> OnSaveButtonClick;
+        public event Action BackClicked;
 
         private void Awake()
         {
+            _screenVisabilityHandler = GetComponent<ScreenVisabilityHandler>();
             _placeDatas = new List<PlaceData>();
-            _addNewPlaceButton.onClick.AddListener(EnableNextPlane);
-            _saveButton.onClick.AddListener(SavePlaces);
         }
 
-        private void OnDestroy()
+        private void OnEnable()
+        {
+            _addNewPlaceButton.onClick.AddListener(EnableNextPlane);
+            _saveButton.onClick.AddListener(SavePlaces);
+            _backButton.onClick.AddListener(OnBackClicked);
+        }
+
+        private void OnDisable()
         {
             _addNewPlaceButton.onClick.RemoveListener(EnableNextPlane);
             _saveButton.onClick.RemoveListener(SavePlaces);
+            _backButton.onClick.RemoveListener(OnBackClicked);
+        }
+
+        private void Start()
+        {
+            _screenVisabilityHandler.DisableScreen();
         }
 
         public void EnableScreen()
         {
+            _screenVisabilityHandler.EnableScreen();
             _placeDatas.Clear();
             DisablePlanes();
             ValidateSaveButton();
@@ -41,12 +57,18 @@ namespace AddPlaceScreen
 
         private void DisablePlanes()
         {
-            _planes[0].Enable();
-            
-            for (var i = 1; i < _planes.Count; i++)
+            foreach (var addPlacePlane in _planes)
             {
-                _planes[i].Disable();
+                addPlacePlane.Disable();
             }
+            
+            ToggleEmptyPlane();
+        }
+
+        private void OnBackClicked()
+        {
+            BackClicked?.Invoke();
+            _screenVisabilityHandler.DisableScreen();
         }
 
         private void EnableNextPlane()
@@ -58,12 +80,18 @@ namespace AddPlaceScreen
             }
             
             ValidateSaveButton();
+            ToggleEmptyPlane();
+        }
+
+        private void ToggleEmptyPlane()
+        {
+            _emptyPlane.SetActive(_planes.All(p => !p.IsActive));
         }
 
         private void ValidateSaveButton()
         {
             bool hasAnyActivePlace = _planes.Any(plane => 
-                plane.IsActive && !string.IsNullOrEmpty(plane.GetPlaceText()));
+                plane.IsActive);
             
             _saveButton.interactable = hasAnyActivePlace;
         }
@@ -81,6 +109,7 @@ namespace AddPlaceScreen
             }
             
             OnSaveButtonClick?.Invoke(_placeDatas);
+            _screenVisabilityHandler.DisableScreen();
         }
     }
 }

@@ -115,7 +115,7 @@ namespace Bitsplash.DatePicker
             if (mAllowEmpty == false && IsSingleDateSelected(DateTime.Today))
                 return;
             mData.Clear();
-            ValidateNonEmpty();
+           ValidateNonEmpty();
             Invalidate();
         }
 

@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
+using TripData;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -35,9 +38,22 @@ namespace MainScreen
             gameObject.SetActive(true);
             IsActive = true;
             
+            UpdateTripData(TripData);
+        }
+
+        public void UpdateTripData(TripData.TripData data)
+        {
+            TripData = new TripData.TripData(
+                data.Name,
+                data.StartDate,
+                data.EndDate,
+                data.Note,
+                new List<PlaceData>(data.PlaceDatas),
+                new List<ExpenseData>(data.ExpenseDatas)
+            );
+    
             _nameText.text = TripData.Name;
             _dateText.text = $"{TripData.StartDate:ddd dd} - {TripData.EndDate:ddd dd}";
-
             _placesText.text = TripData.PlaceDatas.Count.ToString("00");
             _expensesText.text = TripData.ExpenseDatas.Count.ToString("00");
         }

@@ -10,7 +10,6 @@ public class Settings : MonoBehaviour
 {
     [SerializeField] private GameObject _settingsCanvas;
     [SerializeField] private GameObject _privacyCanvas;
-    [SerializeField] private GameObject _termsCanvas;
     [SerializeField] private GameObject _contactCanvas;
     [SerializeField] private GameObject _versionCanvas;
     [SerializeField] private TMP_Text _versionText;
@@ -20,7 +19,6 @@ public class Settings : MonoBehaviour
     {
         _settingsCanvas.SetActive(false);
         _privacyCanvas.SetActive(false);
-        _termsCanvas.SetActive(false);
         _contactCanvas.SetActive(false);
         _versionCanvas.SetActive(false);
         SetVersion();
@@ -34,6 +32,11 @@ public class Settings : MonoBehaviour
     public void ShowSettings()
     {
         _settingsCanvas.SetActive(true);
+    }
+
+    public void HideSettings()
+    {
+        _settingsCanvas.SetActive(false);
     }
 
     public void RateUs()
